@@ -195,3 +195,7 @@ class WsdDataset:
             'start_token_idx': start_idx,
             'end_token_idx': end_idx
         }
+
+
+if __name__=='__main__':
+    pass

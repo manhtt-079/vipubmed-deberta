@@ -3,10 +3,10 @@ from loguru import logger
 from tqdm.auto import tqdm, trange
 from torch.utils.data import RandomSampler, SequentialSampler, DataLoader
 from transformers import get_linear_schedule_with_warmup, AutoTokenizer, DataCollatorWithPadding
-from utils.utils import EarlyStopping, compute_wsd_metrics
-from config.config import WsdConfig
-from wsd.dataloader import WsdDataset
-from wsd.model import WsdModel
+from utils import EarlyStopping, compute_metrics
+from config import WsdConfig
+from dataloader import WsdDataset
+from model import WsdModel
 
 class Trainer(object):
     def __init__(self, config: WsdConfig) -> None:
@@ -195,7 +195,7 @@ class Trainer(object):
             n_step += 1
         
         total_loss = total_loss / n_steps
-        results = compute_wsd_metrics(all_preds=all_preds, all_labels=all_labels)
+        results = compute_metrics(all_preds=all_preds, all_labels=all_labels)
 
         return total_loss, results
     

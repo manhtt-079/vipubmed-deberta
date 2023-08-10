@@ -1,16 +1,12 @@
-import torch
-import random
 import os
-import json
-import copy
 import re
 import pandas as pd
 from loguru import logger
 from datasets import Dataset
 from pyvi import ViTokenizer
 from transformers import AutoTokenizer
-from utils.utils import path_exists
-from config.config import VIMedNLIConfig
+from utils import path_exists
+from config import VIMedNLIConfig
 
 
 class Processor(object):
@@ -37,26 +33,23 @@ class Processor(object):
         
         return df[['premise', 'hypothesis', 'label']]
     
-    def clean(self, text):
+    def clean(self, text: str) -> str:
         text = re.sub(r'\[\*\s?\*?|\[(?=[0-9]{2,4})|\*?\s?\*\]|[\u001d\u0008*]|(?<=-)\/|\*\s\*\s-\s\[', '', text)
         text = re.sub(r'\s{2,}', ' ', text)
         return text.strip()
     
-    def get_examples(self, mode: str):
+    def get_examples(self, mode: str = 'train') -> pd.DataFrame:
         file_name = self.config.train_file_name if mode=='train' else self.config.dev_file_name if mode=='dev' else self.config.test_file_name
         data_path = os.path.join(self.config.data_dir, file_name)
         
         df = self.read_tsv(data_path)
-        labels: list[str] = df['label'].unique().tolist()
-        label2id = {v:k for k, v in enumerate(labels)}
-        df['label'] = df['label'].map(lambda x: label2id[x])
+        df['label'] = df['label'].map(lambda x: self.config.label2id[x])
         
         if self.config.re_tokenize:
             df['premise'] = df['premise'].map(lambda x: ViTokenizer.tokenize(x))
             df['hypotheis'] = df['hypotheis'].map(lambda x: ViTokenizer.tokenize(x))
             
         return df
-
 
 class VIMedNLIDataset:
     def __init__(

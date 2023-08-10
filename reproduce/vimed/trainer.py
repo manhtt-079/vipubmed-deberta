@@ -3,10 +3,10 @@ from loguru import logger
 from tqdm.auto import tqdm, trange
 from torch.utils.data import RandomSampler, SequentialSampler, DataLoader
 from transformers import get_linear_schedule_with_warmup, AutoTokenizer, DataCollatorWithPadding
-from utils.utils import EarlyStopping, compute_metrics
+from utils import EarlyStopping, compute_metrics
 from config import VIMedNLIConfig
-from . import VIMedNLIDataset
-from . import VIMedNLIModel
+from dataloader import VIMedNLIDataset
+from model import VIMedNLIModel
 
 class Trainer(object):
     def __init__(self, config: VIMedNLIConfig) -> None:
@@ -26,7 +26,7 @@ class Trainer(object):
 
     def get_loader(self, mode: str):
         if mode not in ['train', 'dev', 'test']:
-            raise ValueError(f'mode variable must be in: ["train", "dev", "test"]')
+            raise ValueError(f'Mode variable must be in: ["train", "dev", "test"]')
         dataset = self.dataset.get_dataset(mode=mode)
         if mode == 'train':
             sampler = RandomSampler(dataset)

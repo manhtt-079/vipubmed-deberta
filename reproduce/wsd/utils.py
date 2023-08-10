@@ -23,14 +23,14 @@ def path_exists(func):
 
     return inner
 
-def compute_wsd_metrics(all_preds: list[int], all_labels: list[int]):
+def compute_metrics(all_preds: list[int], all_labels: list[int]):
     return {
         'accuracy': accuracy_score(all_labels, all_preds),
         'mac-precision': precision_score(all_labels, all_preds, average='macro'),
         'mac-recall': recall_score(all_labels, all_preds, average='macro'),
         'macro-f1': f1_score(all_labels, all_preds, average='macro')
     }
-
+    
 def seed_everything(seed: int):
     """
     Helper function for reproducible behavior to set the seed in `random`, `numpy`, `torch` and/or `tf` (if installed).
