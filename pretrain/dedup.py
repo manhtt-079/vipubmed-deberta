@@ -1,4 +1,4 @@
-from dataset.dataset import DatasetPipeLine
+from dataset import DatasetPipeLine
 from config.config import DatasetConf
 
 
